@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ My Favorites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Caveat:wght@500;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  :root {
+    --hot-pink: #ff3a94;
+    --pink: #ff6cb5;
+    --pink-soft: #ffc2dd;
+    --orange: #ff7a1f;
+    --orange-deep: #e65f00;
+    --yellow: #ffcf3d;
+    --yellow-warm: #ffe7a0;
+    --magenta: #d61d7a;
+    --cream: #fff4e3;
+    --ink: #3a1a3a;
+  }
+  * { box-sizing: border-box; }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    font-family: 'Fredoka', system-ui, sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: linear-gradient(180deg, #ffd1e4 0%, #ffb2d4 35%, #ffcf8f 62%, #ffe49a 100%);
+    background-attachment: fixed;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 30%; right: -15%;
+    width: 80vw; height: 80vw;
+    max-width: 900px; max-height: 900px;
+    background: radial-gradient(closest-side, rgba(255,58,148,0.45), rgba(255,58,148,0) 70%);
+    transform: rotate(22deg);
+    z-index: 0; pointer-events: none;
+  }
+  body::after {
+    content: "";
+    position: fixed;
+    bottom: -10%; left: -10%;
+    width: 70vw; height: 70vw;
+    max-width: 800px; max-height: 800px;
+    background: radial-gradient(closest-side, rgba(255,207,61,0.55), rgba(255,207,61,0) 70%);
+    z-index: 0; pointer-events: none;
+  }
+  .star-bg {
+    position: fixed; pointer-events: none; z-index: 0;
+    animation: twinkle 3.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 0 rgba(214,29,122,0.35));
+  }
+  @keyframes twinkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.85; }
+    50% { transform: scale(1.15) rotate(12deg); opacity: 1; }
+  }
+  .app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 24px; }
+  .top-ribbon {
+    background: linear-gradient(180deg, #ff8a2a 0%, #ff6a0a 100%);
+    color: white; font-weight: 600; font-size: 0.9rem;
+    padding: 10px 18px; border-radius: 14px;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 3px 0 #c54a00, 0 8px 16px rgba(198,74,0,0.25);
+    margin-bottom: 20px; letter-spacing: 0.5px;
+  }
+  .top-ribbon .crumb { opacity: 0.9; text-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  .top-ribbon .crumb + .crumb::before {
+    content: "›"; margin: 0 8px; color: rgba(255,255,255,0.7);
+  }
+  .top-ribbon .spacer { flex: 1; }
+  header.hero { text-align: center; padding: 18px 16px 22px; position: relative; }
+  .hero-logo-wrap { display: inline-block; position: relative; padding: 14px 30px; }
+  .hero-logo-wrap::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(closest-side, #ffcf3d 0%, #ffcf3d 55%, transparent 70%);
+    z-index: -1; border-radius: 50%;
+    transform: scale(1.2, 1.1);
+  }
+  header.hero h1 {
+    margin: 0;
+    font-family: 'Luckiest Guy', 'Fredoka', cursive;
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    font-weight: 400; letter-spacing: 1px; line-height: 0.95;
+    color: #ff3a94;
+    text-shadow:
+      -2px -2px 0 #fff, 2px -2px 0 #fff,
+      -2px  2px 0 #fff,  2px  2px 0 #fff,
+      0 6px 0 #d61d7a, 0 10px 20px rgba(214,29,122,0.35);
+    -webkit-text-stroke: 1px #fff;
+    transform: rotate(-2deg);
+  }
+  header.hero h1 .small {
+    display: block; font-size: 0.45em; color: #ff7a1f;
+    text-shadow:
+      -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff,
+      -1.5px 1.5px 0 #fff, 1.5px 1.5px 0 #fff,
+      0 4px 0 #b84400;
+    transform: rotate(3deg); margin-bottom: 6px;
+  }
+  header.hero p {
+    margin: 14px 0 0;
+    font-family: 'Caveat', cursive; font-size: 1.5rem;
+    color: var(--magenta); font-weight: 700;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .toolbar {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    align-items: center; justify-content: center;
+    margin-bottom: 14px;
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: white; padding: 10px 18px; border-radius: 999px;
+    box-shadow: 0 4px 0 var(--magenta), 0 8px 16px rgba(214,29,122,0.2);
+    border: 3px solid var(--hot-pink);
+    transition: border-color 0.2s, transform 0.15s;
+    flex: 1 1 280px; max-width: 420px;
+  }
+  .search-box:focus-within { border-color: var(--orange); transform: translateY(-1px); }
+  .search-box input {
+    border: none; outline: none; width: 100%;
+    font-family: inherit; font-size: 1rem; color: var(--ink);
+    background: transparent; font-weight: 500;
+  }
+  .search-box input::placeholder { color: #c086a6; }
+  .pill-btn {
+    background: white; border: 3px solid var(--hot-pink);
+    border-radius: 999px; padding: 10px 20px;
+    font-family: inherit; font-weight: 600; font-size: 0.95rem;
+    cursor: pointer; color: var(--magenta);
+    box-shadow: 0 4px 0 var(--magenta);
+    transition: transform 0.1s, box-shadow 0.1s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .pill-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--magenta); }
+  .pill-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--magenta); }
+  .pill-btn.primary {
+    background: linear-gradient(180deg, #ff6cb5, #ff3a94);
+    color: white; border-color: #fff;
+    box-shadow: 0 4px 0 var(--magenta), 0 0 0 3px var(--magenta);
+  }
+  .pill-btn.primary:hover { box-shadow: 0 6px 0 var(--magenta), 0 0 0 3px var(--magenta); }
+  .pill-btn.primary:active { box-shadow: 0 1px 0 var(--magenta), 0 0 0 3px var(--magenta); }
+  .pill-btn.mint {
+    background: linear-gradient(180deg, #ffa84d, #ff7a1f);
+    color: white; border-color: #fff;
+    box-shadow: 0 4px 0 var(--orange-deep), 0 0 0 3px var(--orange-deep);
+  }
+  .pill-btn.mint:hover { box-shadow: 0 6px 0 var(--orange-deep), 0 0 0 3px var(--orange-deep); }
+  .pill-btn.mint:active { box-shadow: 0 1px 0 var(--orange-deep), 0 0 0 3px var(--orange-deep); }
+  .tabs {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    justify-content: center; margin: 24px 0 28px;
+  }
+  .tab {
+    padding: 12px 24px; border-radius: 999px;
+    border: 3px solid var(--magenta); background: white;
+    font-family: inherit; font-weight: 700; font-size: 1rem;
+    cursor: pointer; color: var(--magenta);
+    display: inline-flex; gap: 8px; align-items: center;
+    box-shadow: 0 4px 0 var(--magenta);
+    transition: transform 0.12s, box-shadow 0.12s;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  }
+  .tab:hover { transform: translateY(-3px) rotate(-2deg); box-shadow: 0 7px 0 var(--magenta); }
+  .tab.active {
+    color: white; text-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    border-color: #fff;
+    box-shadow: 0 4px 0 var(--magenta), 0 0 0 3px var(--magenta);
+  }
+  .tab.active[data-cat="music"]    { background: linear-gradient(180deg, #ff6cb5, #ff3a94); }
+  .tab.active[data-cat="tv"]       { background: linear-gradient(180deg, #ffa84d, #ff7a1f); }
+  .tab.active[data-cat="books"]    { background: linear-gradient(180deg, #ffcf3d, #ffa71f); color: var(--ink); }
+  .tab.active[data-cat="journal"]  { background: linear-gradient(180deg, #ff9ac8, #ff5ea0); }
+  .tab.active[data-cat="videos"]   { background: linear-gradient(180deg, #ff4d6e, #d61d5c); }
+  .filters {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    justify-content: center; margin-bottom: 22px;
+  }
+  .chip {
+    padding: 6px 14px; border-radius: 999px;
+    background: white; border: 2px solid var(--pink);
+    font-family: inherit; font-size: 0.85rem;
+    cursor: pointer; font-weight: 600; color: var(--magenta);
+    transition: all 0.15s; box-shadow: 0 2px 0 var(--hot-pink);
+  }
+  .chip.active {
+    background: var(--hot-pink); color: white; border-color: #fff;
+    box-shadow: 0 2px 0 var(--magenta), 0 0 0 2px var(--magenta);
+  }
+  .chip:hover { transform: translateY(-1px); }
+  .filter-label {
+    color: var(--magenta); font-family: 'Caveat', cursive;
+    font-size: 1.2rem; font-weight: 700; margin-left: 10px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px;
+  }
+  .card {
+    background: white; border-radius: 22px; overflow: hidden;
+    box-shadow: 0 6px 0 var(--hot-pink), 0 12px 24px rgba(214,29,122,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column;
+    position: relative; border: 3px solid var(--hot-pink);
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-4px) rotate(-0.8deg);
+    box-shadow: 0 10px 0 var(--magenta), 0 18px 32px rgba(214,29,122,0.3);
+    border-color: var(--magenta);
+  }
+  .cover {
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(180deg, #ff6cb5, #ff3a94);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3rem; color: white;
+    position: relative; overflow: hidden;
+    border-bottom: 3px solid var(--hot-pink);
+  }
+  .cover::after {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 90% 10%, rgba(255,255,255,0.4), transparent 30%),
+      radial-gradient(circle at 10% 90%, rgba(255,207,61,0.25), transparent 40%);
+    pointer-events: none;
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
+  .cover video { width: 100%; height: 100%; object-fit: cover; position: relative; z-index: 1; }
+  .card.journal .cover {
+    background: linear-gradient(180deg, #ffcf3d, #ffa71f);
+    font-family: 'Caveat', cursive; font-size: 1.35rem;
+    padding: 16px; text-align: center; color: var(--ink);
+    overflow: hidden; line-height: 1.4; font-weight: 700;
+  }
+  .journal-preview {
+    max-height: 100%; overflow: hidden; text-overflow: ellipsis;
+    display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical;
+    position: relative; z-index: 1;
+  }
+  .card-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; background: white; }
+  .card-title {
+    font-weight: 700; font-size: 1.1rem; margin: 0;
+    display: flex; justify-content: space-between; align-items: start; gap: 6px;
+    color: var(--magenta);
+  }
+  .card-notes { font-size: 0.9rem; color: #7a4a68; margin: 0; line-height: 1.4; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    background: var(--yellow-warm); color: var(--orange-deep);
+    font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;
+    font-weight: 700; border: 1.5px solid var(--orange);
+  }
+  .rating { color: #ff8a00; font-size: 1rem; letter-spacing: 2px; text-shadow: 0 1px 0 rgba(255,255,255,0.8); }
+  .card-actions { display: flex; gap: 6px; margin-top: auto; padding-top: 8px; }
+  .icon-btn {
+    background: white; border: 2px solid var(--hot-pink);
+    border-radius: 10px; padding: 5px 10px; cursor: pointer;
+    font-family: inherit; font-size: 0.85rem; color: var(--magenta);
+    transition: transform 0.1s; font-weight: 600;
+    box-shadow: 0 2px 0 var(--hot-pink);
+  }
+  .icon-btn:hover { transform: translateY(-1px); }
+  .icon-btn:active { transform: translateY(1px); box-shadow: 0 1px 0 var(--hot-pink); }
+  .icon-btn.danger { border-color: #d61d1d; color: #d61d1d; box-shadow: 0 2px 0 #d61d1d; }
+  .icon-btn.link {
+    background: linear-gradient(180deg, #ffa84d, #ff7a1f); color: white;
+    border-color: var(--orange-deep); box-shadow: 0 2px 0 var(--orange-deep);
+    text-decoration: none;
+  }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(214,29,122,0.35);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; z-index: 100; backdrop-filter: blur(4px);
+  }
+  .modal {
+    background: white; border-radius: 24px; padding: 28px;
+    width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 10px 0 var(--magenta), 0 24px 60px rgba(214,29,122,0.4);
+    animation: pop 0.25s ease-out;
+    border: 4px solid var(--hot-pink);
+  }
+  @keyframes pop {
+    from { transform: scale(0.92); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal h2 {
+    margin: 0 0 18px;
+    font-family: 'Luckiest Guy', 'Fredoka', cursive;
+    font-size: 1.9rem; letter-spacing: 0.5px;
+    color: var(--hot-pink);
+    text-shadow:
+      -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff,
+      -1.5px  1.5px 0 #fff, 1.5px  1.5px 0 #fff,
+      0 4px 0 var(--magenta);
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .field label { font-weight: 700; font-size: 0.9rem; color: var(--magenta); }
+  .field input[type=text], .field input[type=url], .field textarea, .field select {
+    padding: 10px 14px; border: 2px solid var(--pink); border-radius: 12px;
+    font-family: inherit; font-size: 1rem; color: var(--ink);
+    background: #fffaf3; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    font-weight: 500;
+  }
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--orange); box-shadow: 0 0 0 3px var(--yellow-warm);
+  }
+  .field textarea { min-height: 90px; resize: vertical; font-family: inherit; }
+  .field textarea.journal-input {
+    min-height: 240px; font-family: 'Caveat', cursive;
+    font-size: 1.3rem; line-height: 1.5;
+    background:
+      repeating-linear-gradient(transparent, transparent 31px, #ffc2dd 31px, #ffc2dd 32px),
+      #fffaf3;
+    padding: 4px 16px;
+  }
+  .file-input {
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px; border: 2px dashed var(--hot-pink);
+    border-radius: 12px; background: #fff4f9; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    font-weight: 500; color: var(--magenta);
+  }
+  .file-input:hover { border-color: var(--orange); background: #fff0e0; }
+  .file-input input { display: none; }
+  .star-rating { display: flex; gap: 4px; }
+  .star-rating button {
+    background: none; border: none; cursor: pointer;
+    font-size: 1.9rem; color: #f5d4c3; padding: 0;
+    transition: transform 0.15s; text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .star-rating button:hover { transform: scale(1.25) rotate(10deg); }
+  .star-rating button.active { color: #ff8a00; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--magenta); }
+  .empty .emoji { font-size: 4.5rem; margin-bottom: 12px; filter: drop-shadow(0 4px 0 rgba(214,29,122,0.3)); }
+  .empty h3 {
+    font-family: 'Luckiest Guy', cursive; font-size: 2.4rem;
+    margin: 0 0 6px; color: var(--hot-pink);
+    text-shadow:
+      -1.5px -1.5px 0 #fff, 1.5px -1.5px 0 #fff,
+      -1.5px 1.5px 0 #fff, 1.5px 1.5px 0 #fff,
+      0 4px 0 var(--magenta);
+    letter-spacing: 1px;
+  }
+  .empty p { margin: 0; font-size: 1rem; font-weight: 500; color: var(--orange-deep); }
+  audio, video { width: 100%; border-radius: 10px; }
+  .detail-cover {
+    border-radius: 16px; overflow: hidden; margin-bottom: 16px;
+    background: linear-gradient(180deg, #ff6cb5, #ff3a94);
+    min-height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid var(--hot-pink);
+  }
+  .detail-cover img { width: 100%; max-height: 320px; object-fit: cover; }
+  .detail-content {
+    font-family: 'Caveat', cursive; font-size: 1.35rem;
+    line-height: 1.5; white-space: pre-wrap;
+    background:
+      repeating-linear-gradient(transparent, transparent 31px, #ffe3ee 31px, #ffe3ee 32px),
+      #fffaf3;
+    padding: 16px 20px; border-radius: 12px;
+    border-left: 4px solid var(--hot-pink); color: var(--ink);
+  }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(180deg, #ff6cb5, #ff3a94);
+    color: white; padding: 12px 22px; border-radius: 999px;
+    font-weight: 700; border: 3px solid #fff;
+    box-shadow: 0 4px 0 var(--magenta), 0 10px 30px rgba(214,29,122,0.3);
+    z-index: 1000; animation: slideUp 0.3s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translate(-50%, 20px); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+  }
+  .loader {
+    text-align: center; padding: 80px 20px;
+    font-family: 'Caveat', cursive; font-size: 2rem;
+    color: var(--magenta);
+  }
+  @media (max-width: 500px) {
+    .app { padding: 16px; }
+    .modal { padding: 22px; }
+    .tab { padding: 10px 16px; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+<div id="root"><div class="loader">✨ loading your favorites...</div></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo, useCallback } = React;
+
+// ================================================================
+//   Hybrid storage: try shared API first, fall back to IndexedDB
+// ================================================================
+// Put your backend URL here if you ever deploy the server.
+// Leave '' to use "same origin" (works when serving from the Node server itself).
+// Example once deployed: const API_BASE = 'https://milliefaves.onrender.com';
+const API_BASE = '';
+
+// DATA_MODE is decided at startup by probing the API. 'api' = shared, 'idb' = local browser.
+let DATA_MODE = 'api';
+
+// ---------- IndexedDB layer (local fallback) ----------
+const DB_NAME = 'myFavoritesDB';
+const DB_VERSION = 1;
+const STORE = 'items';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(STORE)) {
+        const os = db.createObjectStore(STORE, { keyPath: 'id' });
+        os.createIndex('category', 'category', { unique: false });
+        os.createIndex('createdAt', 'createdAt', { unique: false });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbAll() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbPut(item) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).put(item);
+    tx.oncomplete = () => resolve(item);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function idbDelete(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function idbClear() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).clear();
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+function newId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+    r.readAsDataURL(blob);
+  });
+}
+async function base64ToBlob(dataUrl) {
+  const res = await fetch(dataUrl);
+  return await res.blob();
+}
+
+// ---------- Shared-server API layer ----------
+async function apiGetAllRaw() {
+  const res = await fetch(`${API_BASE}/api/items`);
+  if (!res.ok) throw new Error('GET /api/items failed: ' + res.status);
+  const ct = res.headers.get('content-type') || '';
+  if (!ct.includes('application/json')) throw new Error('API returned non-JSON');
+  return res.json();
+}
+async function apiCreate(category, formData) {
+  const res = await fetch(`${API_BASE}/api/items/${category}`, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error('POST failed: ' + res.status);
+  return res.json();
+}
+async function apiUpdate(category, id, formData) {
+  const res = await fetch(`${API_BASE}/api/items/${category}/${id}`, { method: 'PUT', body: formData });
+  if (!res.ok) throw new Error('PUT failed: ' + res.status);
+  return res.json();
+}
+async function apiDelete(category, id) {
+  const res = await fetch(`${API_BASE}/api/items/${category}/${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('DELETE failed: ' + res.status);
+  return res.json();
+}
+
+// ---------- Unified data calls (switch on DATA_MODE) ----------
+async function probeApi() {
+  // Decide once: is there a real backend responding?
+  try {
+    await apiGetAllRaw();
+    DATA_MODE = 'api';
+  } catch (e) {
+    DATA_MODE = 'idb';
+    console.info('[milliefaves] No backend reachable — using local IndexedDB. (' + e.message + ')');
+  }
+}
+
+async function getAll() {
+  if (DATA_MODE === 'api') {
+    try { return await apiGetAllRaw(); }
+    catch (e) {
+      // API went away mid-session — degrade to IDB so user doesn't get stuck
+      DATA_MODE = 'idb';
+      console.warn('[milliefaves] API lost, switching to IDB');
+      return await idbAll();
+    }
+  }
+  return await idbAll();
+}
+
+async function createItem(category, formValues) {
+  if (DATA_MODE === 'api') {
+    const fd = new FormData();
+    fd.append('title', formValues.title);
+    fd.append('notes', formValues.notes);
+    fd.append('content', formValues.content);
+    fd.append('link', formValues.link);
+    fd.append('tags', formValues.tagsRaw);
+    fd.append('rating', String(formValues.rating));
+    if (formValues.file) fd.append('file', formValues.file);
+    if (formValues.cover) fd.append('cover', formValues.cover);
+    return await apiCreate(category, fd);
+  }
+  // IDB path
+  const item = {
+    id: newId(),
+    category,
+    title: formValues.title,
+    notes: formValues.notes,
+    content: formValues.content,
+    link: formValues.link,
+    tags: (formValues.tagsRaw || '').split(',').map(t => t.trim()).filter(Boolean),
+    rating: formValues.rating || 0,
+    createdAt: Date.now(),
+    updatedAt: Date.now()
+  };
+  if (formValues.file) {
+    item.file = formValues.file; // store Blob
+    item.fileName = formValues.file.name;
+    item.fileType = formValues.file.type;
+  }
+  if (formValues.cover) {
+    item.cover = formValues.cover; // store Blob
+    item.coverType = formValues.cover.type;
+  }
+  await idbPut(item);
+  return item;
+}
+
+async function updateItem(category, id, prevItem, formValues) {
+  if (DATA_MODE === 'api') {
+    const fd = new FormData();
+    fd.append('title', formValues.title);
+    fd.append('notes', formValues.notes);
+    fd.append('content', formValues.content);
+    fd.append('link', formValues.link);
+    fd.append('tags', formValues.tagsRaw);
+    fd.append('rating', String(formValues.rating));
+    if (formValues.file) fd.append('file', formValues.file);
+    if (formValues.cover) fd.append('cover', formValues.cover);
+    return await apiUpdate(category, id, fd);
+  }
+  const item = { ...prevItem };
+  item.title = formValues.title;
+  item.notes = formValues.notes;
+  item.content = formValues.content;
+  item.link = formValues.link;
+  item.tags = (formValues.tagsRaw || '').split(',').map(t => t.trim()).filter(Boolean);
+  item.rating = formValues.rating || 0;
+  item.updatedAt = Date.now();
+  if (formValues.file) {
+    item.file = formValues.file;
+    item.fileName = formValues.file.name;
+    item.fileType = formValues.file.type;
+  }
+  if (formValues.cover) {
+    item.cover = formValues.cover;
+    item.coverType = formValues.cover.type;
+  }
+  await idbPut(item);
+  return item;
+}
+
+async function deleteItem(category, id) {
+  if (DATA_MODE === 'api') return await apiDelete(category, id);
+  return await idbDelete(id);
+}
+
+function assetUrl(p) {
+  if (!p) return null;
+  if (/^https?:|^data:|^blob:/.test(p)) return p;
+  return (API_BASE || '') + p;
+}
+
+const CATEGORIES = [
+  { id: 'music',    label: 'Music',           emoji: '🎵' },
+  { id: 'tv',       label: 'TV Shows',        emoji: '📺' },
+  { id: 'books',    label: 'Books & Writing', emoji: '📖' },
+  { id: 'journal',  label: 'Journal',         emoji: '📔' },
+  { id: 'videos',   label: 'Videos',          emoji: '🎬' }
+];
+
+const FILE_ACCEPT = {
+  music: 'audio/*',
+  videos: 'video/*',
+  tv: 'image/*,video/*',
+  books: '.pdf,.epub,.txt,.doc,.docx,image/*',
+  journal: ''
+};
+
+function useToast() {
+  const [msg, setMsg] = useState(null);
+  function show(m) {
+    setMsg(m);
+    setTimeout(() => setMsg(null), 2200);
+  }
+  return [msg, show];
+}
+
+function StarRating({ value, onChange, readOnly = false }) {
+  const stars = [1, 2, 3, 4, 5];
+  if (readOnly) {
+    return (
+      <div className="rating">
+        {stars.map(s => s <= Math.round(value || 0) ? '★' : '☆')}
+      </div>
+    );
+  }
+  return (
+    <div className="star-rating">
+      {stars.map(s => (
+        <button type="button" key={s}
+          className={s <= (value || 0) ? 'active' : ''}
+          onClick={() => onChange(s === value ? 0 : s)}
+          aria-label={`${s} star`}>
+          {s <= (value || 0) ? '★' : '☆'}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// Resolve an asset — either a server path string or a local Blob preview
+function useAssetUrl(asset) {
+  const [url, setUrl] = useState(null);
+  useEffect(() => {
+    if (!asset) { setUrl(null); return; }
+    if (typeof asset === 'string') { setUrl(assetUrl(asset)); return; }
+    if (asset instanceof Blob) {
+      const u = URL.createObjectURL(asset);
+      setUrl(u);
+      return () => URL.revokeObjectURL(u);
+    }
+    setUrl(null);
+  }, [asset]);
+  return url;
+}
+
+function ItemModal({ category, item, onClose, onSaved, toast }) {
+  const isJournal = category === 'journal';
+  const [title, setTitle] = useState(item?.title || '');
+  const [notes, setNotes] = useState(item?.notes || '');
+  const [content, setContent] = useState(item?.content || '');
+  const [link, setLink] = useState(item?.link || '');
+  const [tags, setTags] = useState((item?.tags || []).join(', '));
+  const [rating, setRating] = useState(item?.rating || 0);
+  const [file, setFile] = useState(null);
+  const [cover, setCover] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    if (!title.trim()) { toast('Please add a title ✏️'); return; }
+    setSaving(true);
+    try {
+      const formValues = {
+        title: title.trim(),
+        notes, content, link,
+        tagsRaw: tags,
+        rating,
+        file, cover
+      };
+      if (item) {
+        await updateItem(category, item.id, item, formValues);
+      } else {
+        await createItem(category, formValues);
+      }
+      toast(item ? 'Updated! ✨' : 'Added! 🎉');
+      onSaved();
+      onClose();
+    } catch (e) {
+      console.error(e);
+      toast('Oops, save failed 😢');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const fileAccept = FILE_ACCEPT[category];
+  const catLabel = CATEGORIES.find(c => c.id === category).label;
+  const catEmoji = CATEGORIES.find(c => c.id === category).emoji;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h2>{item ? 'Edit' : 'Add new'} {catLabel} {catEmoji}</h2>
+
+        <div className="field">
+          <label>Title</label>
+          <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Give it a name..." />
+        </div>
+
+        {isJournal ? (
+          <div className="field">
+            <label>Your entry</label>
+            <textarea className="journal-input" value={content}
+              onChange={e => setContent(e.target.value)}
+              placeholder="Dear diary..." />
+          </div>
+        ) : (
+          <>
+            <div className="field">
+              <label>Link (optional) — YouTube, Spotify, Goodreads, etc.</label>
+              <input type="url" value={link} onChange={e => setLink(e.target.value)} placeholder="https://..." />
+            </div>
+            <div className="field">
+              <label>Notes</label>
+              <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Why you love this..." />
+            </div>
+            {fileAccept && (
+              <div className="field">
+                <label>Upload file (optional)</label>
+                <label className="file-input">
+                  <input type="file" accept={fileAccept} onChange={e => setFile(e.target.files[0])} />
+                  <span>📁 {file ? file.name : (item?.fileName || 'Click to choose a file')}</span>
+                </label>
+              </div>
+            )}
+            <div className="field">
+              <label>Cover image (optional)</label>
+              <label className="file-input">
+                <input type="file" accept="image/*" onChange={e => setCover(e.target.files[0])} />
+                <span>🖼️ {cover ? cover.name : (item?.cover ? 'Current cover saved' : 'Click to choose an image')}</span>
+              </label>
+            </div>
+          </>
+        )}
+
+        <div className="field">
+          <label>Tags (comma separated)</label>
+          <input type="text" value={tags} onChange={e => setTags(e.target.value)} placeholder="cozy, favorite, 2026" />
+        </div>
+
+        {!isJournal && (
+          <div className="field">
+            <label>Rating</label>
+            <StarRating value={rating} onChange={setRating} />
+          </div>
+        )}
+
+        <div className="modal-actions">
+          <button className="pill-btn" onClick={onClose}>Cancel</button>
+          <button className="pill-btn primary" onClick={save} disabled={saving}>
+            {saving ? 'Saving...' : '💾 Save'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DetailModal({ category, item, onClose, onEdit }) {
+  const isJournal = category === 'journal';
+  const fileUrl = useAssetUrl(item.file);
+  const coverUrl = useAssetUrl(item.cover);
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h2>{item.title}</h2>
+
+        {coverUrl && (
+          <div className="detail-cover"><img src={coverUrl} alt="" /></div>
+        )}
+
+        {fileUrl && item.fileType?.startsWith('audio/') && (
+          <audio controls src={fileUrl} />
+        )}
+        {fileUrl && item.fileType?.startsWith('video/') && (
+          <video controls src={fileUrl} />
+        )}
+        {fileUrl && item.fileType?.startsWith('image/') && !coverUrl && (
+          <div className="detail-cover"><img src={fileUrl} alt="" /></div>
+        )}
+        {fileUrl && !item.fileType?.match(/^(audio|video|image)\//) && (
+          <p style={{ marginTop: 12 }}>
+            📎 <a href={fileUrl} download={item.fileName} target="_blank" rel="noreferrer">{item.fileName || 'Open file'}</a>
+          </p>
+        )}
+
+        {item.link && (
+          <p style={{ marginTop: 12 }}>
+            🔗 <a href={item.link} target="_blank" rel="noreferrer">{item.link}</a>
+          </p>
+        )}
+
+        {isJournal && item.content && (
+          <div className="detail-content">{item.content}</div>
+        )}
+
+        {item.notes && !isJournal && (
+          <p style={{ color: '#5a4b9c', lineHeight: 1.5, marginTop: 12 }}>{item.notes}</p>
+        )}
+
+        {!isJournal && item.rating > 0 && (
+          <div style={{ marginTop: 12 }}>
+            <StarRating value={item.rating} readOnly />
+          </div>
+        )}
+
+        {item.tags && item.tags.length > 0 && (
+          <div className="card-tags" style={{ marginTop: 12 }}>
+            {item.tags.map(t => <span key={t} className="tag">#{t}</span>)}
+          </div>
+        )}
+
+        <div className="modal-actions">
+          <button className="pill-btn" onClick={onClose}>Close</button>
+          <button className="pill-btn primary" onClick={onEdit}>✏️ Edit</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Card({ item, onOpen, onEdit, onDelete }) {
+  const isJournal = item.category === 'journal';
+  const cat = CATEGORIES.find(c => c.id === item.category);
+  const fileUrl = useAssetUrl(item.file);
+  const coverUrl = useAssetUrl(item.cover);
+
+  function renderCover() {
+    if (coverUrl) return <img src={coverUrl} alt="" />;
+    if (fileUrl && item.fileType?.startsWith('image/')) return <img src={fileUrl} alt="" />;
+    if (fileUrl && item.fileType?.startsWith('video/')) return <video src={fileUrl} muted />;
+    if (isJournal) return <div className="journal-preview">{item.content || 'No entry yet...'}</div>;
+    return <span style={{ fontSize: '3.5rem', position: 'relative', zIndex: 1 }}>{cat.emoji}</span>;
+  }
+
+  return (
+    <div className={`card ${isJournal ? 'journal' : ''}`} onClick={onOpen}>
+      <div className="cover">{renderCover()}</div>
+      <div className="card-body">
+        <h3 className="card-title">
+          <span>{item.title}</span>
+          {!isJournal && item.rating > 0 && <StarRating value={item.rating} readOnly />}
+        </h3>
+        {item.notes && !isJournal && (
+          <p className="card-notes">{item.notes.slice(0, 120)}{item.notes.length > 120 ? '...' : ''}</p>
+        )}
+        {item.tags && item.tags.length > 0 && (
+          <div className="card-tags">
+            {item.tags.slice(0, 4).map(t => <span key={t} className="tag">#{t}</span>)}
+          </div>
+        )}
+        <div className="card-actions" onClick={e => e.stopPropagation()}>
+          {item.link && (
+            <a className="icon-btn link" href={item.link} target="_blank" rel="noreferrer">🔗 Link</a>
+          )}
+          <button className="icon-btn" onClick={onEdit}>✏️</button>
+          <button className="icon-btn danger" onClick={onDelete}>🗑</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [category, setCategory] = useState('music');
+  const [allItems, setAllItems] = useState([]);
+  const [query, setQuery] = useState('');
+  const [activeTag, setActiveTag] = useState('');
+  const [minRating, setMinRating] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [detailItem, setDetailItem] = useState(null);
+  const [toastMsg, showToast] = useToast();
+  const [mode, setMode] = useState('loading'); // 'loading' | 'api' | 'idb'
+  const importRef = useRef();
+
+  const loadItems = useCallback(async () => {
+    try {
+      const items = await getAll();
+      setAllItems(items);
+    } catch (e) {
+      console.error(e);
+      showToast('Could not load data 😢');
+    }
+  }, []);
+
+  // First mount — probe API, then load items
+  useEffect(() => {
+    (async () => {
+      await probeApi();
+      setMode(DATA_MODE);
+      await loadItems();
+    })();
+  }, [loadItems]);
+
+  // Apply filters for the current category
+  const items = useMemo(() => {
+    let list = allItems.filter(it => it.category === category);
+    if (query) {
+      const q = query.toLowerCase();
+      list = list.filter(it =>
+        (it.title || '').toLowerCase().includes(q) ||
+        (it.notes || '').toLowerCase().includes(q) ||
+        (it.content || '').toLowerCase().includes(q) ||
+        (it.tags || []).some(t => t.toLowerCase().includes(q))
+      );
+    }
+    if (activeTag) list = list.filter(it => (it.tags || []).includes(activeTag));
+    if (minRating > 0) list = list.filter(it => (it.rating || 0) >= minRating);
+    return [...list].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }, [allItems, category, query, activeTag, minRating]);
+
+  const allTags = useMemo(() => {
+    const s = new Set();
+    allItems.forEach(it => (it.tags || []).forEach(t => s.add(t)));
+    return [...s].sort();
+  }, [allItems]);
+
+  async function handleDelete(id) {
+    if (!confirm('Remove this favorite?')) return;
+    const target = allItems.find(it => it.id === id);
+    if (!target) return;
+    try {
+      await deleteItem(target.category, id);
+      showToast('Deleted');
+      loadItems();
+    } catch (e) {
+      console.error(e);
+      showToast('Delete failed 😢');
+    }
+  }
+
+  async function handleExport() {
+    showToast('Preparing export... 📦');
+    try {
+      let blobPayload;
+      if (DATA_MODE === 'api') {
+        const r = await fetch(`${API_BASE}/api/export`);
+        if (!r.ok) throw new Error('Export failed');
+        blobPayload = await r.blob();
+      } else {
+        // IDB export: inline blobs as base64 so the file is self-contained
+        const exported = [];
+        for (const it of allItems) {
+          const clone = { ...it };
+          if (it.file instanceof Blob)  clone.file  = await blobToBase64(it.file);
+          if (it.cover instanceof Blob) clone.cover = await blobToBase64(it.cover);
+          exported.push(clone);
+        }
+        blobPayload = new Blob(
+          [JSON.stringify({ version: 2, items: exported }, null, 2)],
+          { type: 'application/json' }
+        );
+      }
+      const url = URL.createObjectURL(blobPayload);
+      const a = document.createElement('a');
+      a.href = url;
+      const d = new Date().toISOString().slice(0, 10);
+      a.download = `favorites-backup-${d}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Exported! ✨');
+    } catch (e) {
+      console.error(e);
+      showToast('Export failed 😢');
+    }
+  }
+
+  async function handleImport(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!confirm('This will REPLACE all your current favorites. Continue?')) {
+      e.target.value = '';
+      return;
+    }
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      if (DATA_MODE === 'api') {
+        // Accept either { music:[], tv:[], ... } or { items: [...] }
+        let payload = data;
+        if (Array.isArray(data.items)) {
+          const grouped = { music: [], tv: [], books: [], journal: [], videos: [] };
+          data.items.forEach(it => {
+            const clone = { ...it };
+            // Strip legacy base64 blobs — server uploads use file paths
+            if (typeof clone.file === 'string' && clone.file.startsWith('data:')) delete clone.file;
+            if (typeof clone.cover === 'string' && clone.cover.startsWith('data:')) delete clone.cover;
+            if (typeof clone.fileBlob === 'string') delete clone.fileBlob;
+            if (typeof clone.coverBlob === 'string') delete clone.coverBlob;
+            if (clone.category && grouped[clone.category]) grouped[clone.category].push(clone);
+          });
+          payload = grouped;
+        }
+        const res = await fetch(`${API_BASE}/api/import`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Import failed');
+      } else {
+        // IDB import
+        const list = Array.isArray(data.items) ? data.items : (Array.isArray(data) ? data : []);
+        await idbClear();
+        for (const it of list) {
+          const clone = { ...it };
+          // Legacy field names from older exports
+          if (clone.fileBlob && !clone.file) clone.file = clone.fileBlob;
+          if (clone.coverBlob && !clone.cover) clone.cover = clone.coverBlob;
+          delete clone.fileBlob; delete clone.coverBlob;
+          if (typeof clone.file === 'string' && clone.file.startsWith('data:')) {
+            clone.file = await base64ToBlob(clone.file);
+          }
+          if (typeof clone.cover === 'string' && clone.cover.startsWith('data:')) {
+            clone.cover = await base64ToBlob(clone.cover);
+          }
+          if (!clone.id) clone.id = newId();
+          if (!clone.createdAt) clone.createdAt = Date.now();
+          await idbPut(clone);
+        }
+      }
+      showToast('Imported! 🎉');
+      loadItems();
+    } catch (err) {
+      console.error(err);
+      showToast('Import failed — invalid file');
+    }
+    e.target.value = '';
+  }
+
+  const catInfo = CATEGORIES.find(c => c.id === category);
+  const modeBadge = mode === 'api' ? '☁️ shared' : (mode === 'idb' ? '💾 local' : '…');
+
+  // Scattered SVG stars for decoration
+  const stars = useMemo(() => {
+    const colors = ['#fff', '#ffcf3d', '#ff6cb5', '#ffb3d4', '#ff7a1f'];
+    return Array.from({ length: 22 }, (_, i) => ({
+      top: Math.random() * 95 + '%',
+      left: Math.random() * 98 + '%',
+      size: 18 + Math.random() * 44,
+      rotate: (Math.random() * 60 - 30).toFixed(1),
+      color: colors[i % colors.length],
+      delay: (i * 0.25).toFixed(2) + 's'
+    }));
+  }, []);
+  const starPath = "M50 0 L61 35 L98 35 L68 57 L79 92 L50 70 L21 92 L32 57 L2 35 L39 35 Z";
+
+  return (
+    <>
+      {stars.map((s, i) => (
+        <svg key={i} className="star-bg" viewBox="0 0 100 100" style={{
+          top: s.top, left: s.left, width: s.size, height: s.size,
+          transform: `rotate(${s.rotate}deg)`, animationDelay: s.delay
+        }}>
+          <path d={starPath} fill={s.color} stroke="#d61d7a" strokeWidth="4" strokeLinejoin="round"/>
+        </svg>
+      ))}
+
+      <div className="app">
+        <div className="top-ribbon">
+          <span className="crumb">✨ My Favorites</span>
+          <span className="crumb">{catInfo.emoji} {catInfo.label}</span>
+          <span className="spacer"></span>
+          <span className="crumb" title={mode === 'idb' ? 'Saving to this browser only — deploy the Node server to share with others' : 'Connected to shared backend'}>
+            {modeBadge}
+          </span>
+          <span className="crumb" style={{ fontFamily: 'Caveat, cursive', fontSize: '1.1rem' }}>powered by vibes 💖</span>
+        </div>
+
+        <header className="hero">
+          <div className="hero-logo-wrap">
+            <h1>
+              <span className="small">that's so</span>
+              Camille
+            </h1>
+          </div>
+          <p>a little corner of everything I love ✨</p>
+        </header>
+
+        <div className="toolbar">
+          <div className="search-box">
+            <span>🔍</span>
+            <input placeholder="Search your favorites..."
+              value={query} onChange={e => setQuery(e.target.value)} />
+          </div>
+          <button className="pill-btn mint" onClick={handleExport}>📦 Export</button>
+          <button className="pill-btn mint" onClick={() => importRef.current.click()}>📥 Import</button>
+          <input ref={importRef} type="file" accept="application/json"
+            style={{ display: 'none' }} onChange={handleImport} />
+        </div>
+
+        <nav className="tabs">
+          {CATEGORIES.map(c => (
+            <button key={c.id} data-cat={c.id}
+              className={`tab ${category === c.id ? 'active' : ''}`}
+              onClick={() => { setCategory(c.id); setActiveTag(''); }}>
+              <span>{c.emoji}</span> {c.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="filters">
+          <button className="pill-btn primary"
+            onClick={() => { setEditingItem(null); setModalOpen(true); }}>
+            ➕ Add {catInfo.label}
+          </button>
+
+          {allTags.length > 0 && (
+            <>
+              <span className="filter-label">Tags:</span>
+              <button className={`chip ${!activeTag ? 'active' : ''}`}
+                onClick={() => setActiveTag('')}>All</button>
+              {allTags.map(t => (
+                <button key={t} className={`chip ${activeTag === t ? 'active' : ''}`}
+                  onClick={() => setActiveTag(t)}>#{t}</button>
+              ))}
+            </>
+          )}
+
+          {category !== 'journal' && (
+            <>
+              <span className="filter-label">Min rating:</span>
+              {[0, 3, 4, 5].map(r => (
+                <button key={r} className={`chip ${minRating === r ? 'active' : ''}`}
+                  onClick={() => setMinRating(r)}>{r === 0 ? 'Any' : `${r}★+`}</button>
+              ))}
+            </>
+          )}
+        </div>
+
+        {items.length === 0 ? (
+          <div className="empty">
+            <div className="emoji">{catInfo.emoji}</div>
+            <h3>Nothing here yet!</h3>
+            <p>Tap "Add" to start collecting your favorite {catInfo.label.toLowerCase()}.</p>
+          </div>
+        ) : (
+          <div className="grid">
+            {items.map(item => (
+              <Card key={item.id} item={item}
+                onOpen={() => setDetailItem(item)}
+                onEdit={() => { setEditingItem(item); setModalOpen(true); }}
+                onDelete={() => handleDelete(item.id)} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {modalOpen && (
+        <ItemModal category={category} item={editingItem}
+          onClose={() => { setModalOpen(false); setEditingItem(null); }}
+          onSaved={loadItems} toast={showToast} />
+      )}
+
+      {detailItem && (
+        <DetailModal category={detailItem.category} item={detailItem}
+          onClose={() => setDetailItem(null)}
+          onEdit={() => { setEditingItem(detailItem); setDetailItem(null); setModalOpen(true); }} />
+      )}
+
+      {toastMsg && <div className="toast">{toastMsg}</div>}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
